@@ -26,4 +26,11 @@ public class Mover : MonoBehaviour
         speed = gameController.speed;
         rb.velocity = transform.forward * speed;
      }
+     void Update()
+     {
+       if (gameController.won == true)
+       {
+         Destroy(gameObject);
+       }
+     }
 }
