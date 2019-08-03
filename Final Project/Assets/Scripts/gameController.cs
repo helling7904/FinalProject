@@ -11,11 +11,15 @@ public class gameController : MonoBehaviour
     public AudioSource background;
     public AudioSource win;
     public AudioSource loose;
+    public Button normalMode;
+    public Button timedMode;
+    public Button hardMode;
     public int hazardCount;
     public int timeLeft;
     public float spawnWait;
     public float startWait;
     public float waveWait;
+    public float speed;
 
     public Text ScoreText;
     public Text restartText;
@@ -45,6 +49,7 @@ public class gameController : MonoBehaviour
         timerText.text = "Normal";
         createdText.text = "";
         score = 0;
+        speed = -5f;
         UpdateScore();
         StartCoroutine(SpawnWaves());
         getAudio();
@@ -63,21 +68,11 @@ public class gameController : MonoBehaviour
         }
         if (Input.GetKey("escape"))
             Application.Quit();
-        if (Input.GetKeyDown(KeyCode.T))
-            {
-                Timed();
-                getAudio();
-            }
-        if (Input.GetKeyDown(KeyCode.H))
-            {
-                Hard();
-                getAudio();
-            }
-        if (Input.GetKeyDown(KeyCode.N))
-            {
-                Normal();
-                getAudio();
-            }
+
+        normalMode.onClick.AddListener(Normal);
+        timedMode.onClick.AddListener(Timed);
+        hardMode.onClick.AddListener(Hard);
+
         if (timed == true)
         {
             if(Time.time>=nextUpdate)
@@ -133,6 +128,7 @@ public class gameController : MonoBehaviour
             createdText.text = "Game created by Holden Elling!";
             background.Stop();
             win.Play();
+            speed = -20.0f;
            }
         if (score >= 1000 && hard == true)
           {
@@ -144,6 +140,7 @@ public class gameController : MonoBehaviour
             createdText.text = "Game created by Holden Elling!";
             background.Stop();
             win.Play();
+            speed = -20.0f;
            }
       }
 
@@ -164,6 +161,7 @@ public class gameController : MonoBehaviour
         hazardCount = 10;
         spawnWait = .5f;
         waveWait = .5f;
+        speed = -5.0f;
         timer1();
         UpdateScore();
     }
@@ -178,6 +176,7 @@ public class gameController : MonoBehaviour
         spawnWait = .5f;
         waveWait = 4;
         timeLeft = 30;
+        speed = -5.0f;
         UpdateScore();
     }
     public void Hard()
@@ -191,6 +190,7 @@ public class gameController : MonoBehaviour
         spawnWait = .3f;
         waveWait = 2;
         timeLeft = 30;
+        speed = -10.0f;
         UpdateScore();
     }
     void getAudio()
@@ -205,15 +205,11 @@ public class gameController : MonoBehaviour
 {
     if (timeLeft > 0)
     {
-        // Display the new time left
-        // by updating the Time Left label.
         timeLeft = timeLeft - 1;
         timerText.text = timeLeft + " seconds";
     }
     else
     {
-        // If the user ran out of time, stop the timer, show
-        // a MessageBox, and fill in the answers.
         timeLeft = 0;
         timerText.text = timeLeft + " seconds";
         gameOverText.text = "Out of Time!";
